@@ -1,0 +1,44 @@
+﻿@inject IConfiguration _configuration
+@{
+    var sitekey = _configuration["GoogleReCaptcha:SiteKey"];
+}
+@model Login
+
+<script type="text/javascript">
+    var onloadCallback = function() {
+      grecaptcha.render('html_element', {
+            'sitekey': '@sitekey'
+        });
+    };
+    function onSubmit(event){
+        var token = grecaptcha.getResponse();
+        document.getElementById("recaptchaTokenInputId").value = token
+    }
+</script>
+
+
+<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
+    async defer>
+</script>
+
+
+
+
+
+<form method="post" onsubmit="onSubmit(event)">
+    <input type="hidden" id="recaptchaTokenInputId" asp-for="RecaptchaToken" />
+    <div class="form-group">
+        <label for="exampleInputEmail1">Email address</label>
+        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" asp-for="Email">
+    </div>
+    <div class="form-group">
+        <label for="exampleInputPassword1">Password</label>
+        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" asp-for="Password">
+    </div>
+    <div class="form-group">
+        <div id="html_element"></div>
+    </div>
+    <div class="form-group">
+    <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
